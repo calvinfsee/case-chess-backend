@@ -14,6 +14,7 @@ const io = socketio(server, {
 }});
 
 io.on('connection', client => {
+  console.log('connection');
   socketLogic.initializeGame(io, client)
 })
 

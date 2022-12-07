@@ -42,15 +42,16 @@ function playerJoinsGame(idData) {
   var sock = this
 
   // Look up the room ID in the Socket.IO manager object.
-  var room = io.sockets.adapter.rooms[idData.gameId]
- // console.log(room)
+  var room = io.sockets.adapter.rooms.get(idData.gameId);
+  // console.log(io.sockets.adapter.rooms);
+  // console.log(room);
 
   // If the room exists...
   if (room === undefined) {
       this.emit('status' , "This game session does not exist." );
       return
   }
-  if (room.length < 2) {
+  if (room.size < 2) {
       // attach the socket id to the data object.
       idData.mySocketId = sock.id;
 
@@ -59,8 +60,10 @@ function playerJoinsGame(idData) {
 
       console.log(room.length)
 
-      if (room.length === 2) {
-          io.sockets.in(idData.gameId).emit('start game', idData.userName)
+      if (room.size === 2) {
+        const coinToss = Math.floor(Math.random() * 100);
+        const oColor = coinToss >= 50 ? 'w' : 'b';
+        io.sockets.in(idData.gameId).emit('start game', { opponent: idData.userName, oColor })
       }
 
       // Emit an event notifying the clients that the player has joined the room.
