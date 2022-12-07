@@ -58,8 +58,6 @@ function playerJoinsGame(idData) {
       // Join the room
       sock.join(idData.gameId);
 
-      console.log(room.length)
-
       if (room.size === 2) {
         const coinToss = Math.floor(Math.random() * 100);
         const oColor = coinToss >= 50 ? 'w' : 'b';
