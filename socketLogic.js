@@ -31,6 +31,10 @@ const initializeGame = (sio, socket) => {
   gameSocket.on('request username', requestUserName)
 
   gameSocket.on('recieved userName', recievedUserName)
+
+  gameSocket.on('request rematch', requestRematch)
+
+  gameSocket.on('rematch accepted', rematchAccepted)
 }
 
 function playerJoinsGame(idData) {
@@ -106,6 +110,16 @@ function requestUserName(gameId) {
 function recievedUserName(data) {
   data.socketId = this.id
   io.to(data.gameId).emit('get Opponent UserName', data);
+}
+
+function requestRematch(req) {
+  const { gameId, username } = req;
+  io.to(gameId).emit('request rematch', req);
+}
+
+function rematchAccepted(req) {
+  const gameId = req.gameId;
+  io.to(gameId).emit('rematch accepted', req);
 }
 
 exports.initializeGame = initializeGame;
