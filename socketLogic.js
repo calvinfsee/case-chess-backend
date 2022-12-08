@@ -32,7 +32,7 @@ const initializeGame = (sio, socket) => {
 
   gameSocket.on('recieved userName', recievedUserName)
 
-  gameSocket.on('request rematch', requestRematch)
+  gameSocket.on('rematch', requestRematch)
 
   gameSocket.on('rematch accepted', rematchAccepted)
 }
@@ -114,12 +114,14 @@ function recievedUserName(data) {
 
 function requestRematch(req) {
   const { gameId, username } = req;
-  io.to(gameId).emit('request rematch', req);
+  io.to(gameId).emit('rematch', req);
 }
 
 function rematchAccepted(req) {
   const gameId = req.gameId;
-  io.to(gameId).emit('rematch accepted', req);
+  const coinToss = Math.floor(Math.random() * 100);
+  const oColor = coinToss >= 50 ? 'w' : 'b';
+  io.to(gameId).emit('start game', { opponent: req.username, oColor });
 }
 
 exports.initializeGame = initializeGame;
